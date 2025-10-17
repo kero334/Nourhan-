@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letters to Nourhan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter (Default) and Kalam (Handwriting Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the paper effect and smooth transition */
+        :root {
+            --paper-cream: #faf7f2; /* Soft, aged paper color */
+            --paper-border: #e6e3df;
+            --text-brown: #4a403a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--paper-cream);
+            color: var(--text-brown);
+        }
+
+        /* Specific style for the handwritten message */
+        .handwritten-message {
+            font-family: 'Kalam', cursive;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #2c2521;
+        }
+
+        /* The container for the letter/envelope card */
+        .letter-card {
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease-in-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        /* --- NEW: Visual for READ status --- */
+        .letter-card.is-read {
+            opacity: 0.8; /* Slightly faded */
+            background-color: #f5f0eb; /* Slightly darker cream for 'used' paper */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Less pronounced shadow */
+        }
+
+        /* Closed state: compact envelope */
+        .letter-content-wrapper {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding-top: 0;
+            transition: max-height 0.6s ease-out, opacity 0.5s ease-out, padding 0.6s ease-out;
+        }
+
+        /* Open state: full paper revealed */
+        .letter-card.is-open {
+            opacity: 1 !important; /* Reset opacity for readability when open */
+            /* Increase shadow and lift slightly when open */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            transform: translateY(-8px);
+        }
+
+        .letter-card.is-open .letter-content-wrapper {
+            max-height: 1000px; /* Large enough value for transition */
+            opacity: 1;
+            padding-top: 1rem;
+            padding-bottom: 2rem;
+        }
+        
+        /* Transition for the envelope cover (the initial content) */
+        .envelope-preview {
+            transition: opacity 0.3s ease-in;
+        }
+        .letter-card.is-open .envelope-preview {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .profile-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        /* Ensure smooth interaction on touch devices */
+        @media (max-width: 640px) {
+            .handwritten-message {
+                font-size: 1rem;
+            }
+            .profile-image {
+                width: 64px;
+                height: 64px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8">
+
+    <header class="text-center mb-10 pt-4">
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brown-900 border-b-2 border-amber-300 pb-2 inline-block">
+            Letters to Our Wonderful Mentor Nourhan 💌
+        </h1>
+        <p class="text-lg mt-2 text-gray-600 font-medium">
+            From SA Class 3 B1 2025
+        </p>
+    </header>
+
+    <main id="letters-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto pb-12">
+        <!-- Letters will be rendered here by JavaScript -->
+    </main>
+
+    <script>
+        // Use a self-invoking function for isolated scope
+        (function() {
+            
+            // --- LOCAL STORAGE & READ STATUS UTILITIES ---
+            const READ_KEY = 'nourhan_read_letters_v1';
+            let readLetterIds = new Set();
+
+            /** Loads the set of read letter IDs from localStorage. */
+            function loadReadStatus() {
+                const stored = localStorage.getItem(READ_KEY);
+                if (stored) {
+                    try {
+                        readLetterIds = new Set(JSON.parse(stored));
+                    } catch (e) {
+                        console.error("Error loading read status from localStorage:", e);
+                        readLetterIds = new Set();
+                    }
+                }
+            }
+
+            /** Adds a letter ID to the read set and saves it back to localStorage. */
+            function saveReadStatus(id) {
+                if (!readLetterIds.has(id)) {
+                    readLetterIds.add(id);
+                    localStorage.setItem(READ_KEY, JSON.stringify(Array.from(readLetterIds)));
+                    console.log(`Letter ${id} marked as read.`);
+                }
+            }
+            // --- END UTILITIES ---
+
+            // Data structure representing the Google Sheet input
+            const MESSAGES = [
+                {
+                    name: "Alexia H.",
+                    text: "Dear Nourhan, I wanted to thank you for your patience and dedication this semester. Your advice on my final project was invaluable, and I feel so much more confident in my work now. Truly appreciate everything!",
+                    image: "https://placehold.co/100x100/D2B48C/4a403a?text=AH", // Tan
+                },
+                {
+                    name: "Jana M.",
+                    text: "The B1 class wouldn't be the same without your energy! You always managed to turn the hardest concepts into fun lessons. Thanks for making SA 3 memorable. Wishing you a great break and happy holidays!",
+                    image: "https://placehold.co/100x100/A0522D/faf7f2?text=JM", // Sienna
+                },
+                {
+                    name: "Omar K.",
+                    text: "I was struggling a lot with the deployment phase, but your step-by-step guidance made it click. You're an incredible mentor, Nourhan. Your technical insight is unparalleled. See you next term!",
+                    image: "https://placehold.co/100x100/8B4513/faf7f2?text=OK", // SaddleBrown
+                },
+                {
+                    name: "Sarah E.",
+                    text: "Thank you for creating such a supportive learning environment. It felt safe to ask questions, no matter how small. Your mentorship is a gift to all of us, and we are so lucky to have you. Best wishes!",
+                    image: "https://placehold.co/100x100/F4A460/4a403a?text=SE", // SandyBrown
+                },
+                {
+                    name: "Tariq F.",
+                    text: "I learned so much about clean code practices this month, thanks entirely to your focused feedback. This experience has significantly changed how I approach programming. Thank you for pushing me!",
+                    image: "https://placehold.co/100x100/CD853F/4a403a?text=TF", // Peru
+                },
+                {
+                    name: "Layla P.",
+                    text: "Your encouragement during the difficult phases of the project meant the world. It’s hard to find a mentor who cares so much about both technical growth and personal well-being. Thank you for everything!",
+                    image: "https://placehold.co/100x100/E9967A/4a403a?text=LP", // DarkSalmon
+                }
+            ];
+
+            const lettersContainer = document.getElementById('letters-container');
+
+            /**
+             * Handles the opening and closing of a letter, and marks it as read.
+             * @param {HTMLElement} clickedLetter - The letter card element that was clicked.
+             */
+            function toggleLetter(clickedLetter) {
+                const isOpen = clickedLetter.classList.contains('is-open');
+                const letterId = clickedLetter.dataset.id; // Get the unique ID
+
+                // 1. Close all currently open letters
+                document.querySelectorAll('.letter-card').forEach(letter => {
+                    if (letter !== clickedLetter && letter.classList.contains('is-open')) {
+                        letter.classList.remove('is-open');
+                        letter.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // 2. Toggle the clicked letter
+                if (isOpen) {
+                    clickedLetter.classList.remove('is-open');
+                    clickedLetter.setAttribute('aria-expanded', 'false');
+                } else {
+                    clickedLetter.classList.add('is-open');
+                    clickedLetter.setAttribute('aria-expanded', 'true');
+                    
+                    // NEW: Mark as read and update visual state
+                    if (letterId && !clickedLetter.classList.contains('is-read')) {
+                        saveReadStatus(letterId);
+                        clickedLetter.classList.add('is-read'); 
+                    }
+
+                    // Scroll the opened letter into view after a short delay for animation
+                    setTimeout(() => {
+                        clickedLetter.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 500);
+                }
+            }
+
+            /**
+             * Renders a single letter card element.
+             */
+            function createLetterCard(message, index) {
+                const letterId = `letter-${index}`;
+                const isRead = readLetterIds.has(letterId);
+
+                const card = document.createElement('div');
+                
+                // NEW: Conditionally apply is-read class on load
+                card.classList.add(
+                    'letter-card', 'rounded-xl', 'p-6', 'border', 'border-paper-border', 'bg-white',
+                    'transition-transform', 'duration-500', 'ease-in-out', 'relative', 'overflow-hidden',
+                    isRead ? 'is-read' : 'is-unread' 
+                );
+                
+                card.setAttribute('tabindex', '0'); // Make focusable
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-controls', `message-${index}`);
+                card.setAttribute('aria-expanded', 'false');
+                card.dataset.id = letterId; // Store ID for read tracking
+                
+                // Add a slight gradient overlay for paper texture feel
+                const textureOverlay = `<div class="absolute inset-0 bg-gradient-to-br from-white/95 to-amber-50/70 pointer-events-none"></div>`;
+
+                // Determine unread status text
+                const statusText = isRead ? 'Read' : 'Click to Open (New)';
+
+                card.innerHTML = `
+                    ${textureOverlay}
+
+                    <!-- 1. Envelope Preview (Closed State) -->
+                    <div class="envelope-preview flex items-center justify-between z-10 relative">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-3xl sm:text-4xl text-amber-600">✉️</span>
+                            <span class="font-semibold text-lg">Letter from ${message.name}</span>
+                        </div>
+                        <span class="text-sm text-gray-500 hidden sm:block font-medium ${isRead ? 'text-gray-500' : 'text-amber-700 font-bold'}">${statusText}</span>
+                    </div>
+
+                    <!-- 2. Full Letter Content (Open State - Hidden by Default) -->
+                    <div id="message-${index}" class="letter-content-wrapper relative z-10" aria-hidden="true">
+                        
+                        <!-- Header: Sender Info -->
+                        <div class="flex items-start mb-6">
+                            <img 
+                                src="${message.image}" 
+                                alt="Profile image of ${message.name}" 
+                                class="profile-image rounded-full border-4 border-amber-300 shadow-md flex-shrink-0"
+                                onerror="this.onerror=null; this.src='https://placehold.co/100x100/5C4033/ffffff?text=${message.name.charAt(0)}';"
+                            >
+                            <div class="ml-4 pt-1">
+                                <p class="text-xs text-gray-500 font-medium tracking-wider uppercase">A heartfelt message from</p>
+                                <h2 class="text-2xl font-bold text-gray-800">${message.name}</h2>
+                            </div>
+                        </div>
+
+                        <!-- Body: Message Text (Handwritten style) -->
+                        <div class="border-t border-b border-paper-border py-4 my-4">
+                            <p class="handwritten-message whitespace-pre-wrap leading-relaxed">${message.text}</p>
+                        </div>
+                        
+                        <div class="text-right mt-6">
+                            <button class="text-amber-700 font-semibold hover:text-amber-900 transition-colors duration-200">
+                                Fold Back 👆
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    toggleLetter(card);
+                });
+
+                // Add keyboard accessibility for better UX
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleLetter(card);
+                    }
+                });
+
+                return card;
+            }
+
+            /**
+             * Initializes the application by rendering all messages.
+             */
+            function initializeApp() {
+                loadReadStatus(); // NEW: Load status before rendering
+                MESSAGES.forEach((message, index) => {
+                    const card = createLetterCard(message, index);
+                    lettersContainer.appendChild(card);
+                });
+            }
+
+            window.onload = initializeApp;
+
+        })();
+    </script>
+</body>
+</html>
