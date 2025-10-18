@@ -102,7 +102,7 @@
 
     <header class="text-center mb-10 pt-4">
         <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brown-900 border-b-2 border-amber-300 pb-2 inline-block">
-            Letters to Our Wonderful Mentor Nourhan 💌
+            Letters to Our Wonderful facilitator Nourhan 💌
         </h1>
         <p class="text-lg mt-2 text-gray-600 font-medium">
             From SA Class 3 B1 2025
@@ -144,37 +144,31 @@
             }
             // --- END UTILITIES ---
 
-            // Data structure representing the Google Sheet input
+            // Data structure representing the students' messages
             const MESSAGES = [
+                // 1. رسالة Kerollos - تم تحديث رابط الصورة
                 {
-                    name: "Alexia H.",
-                    text: "Dear Nourhan, I wanted to thank you for your patience and dedication this semester. Your advice on my final project was invaluable, and I feel so much more confident in my work now. Truly appreciate everything!",
-                    image: "https://placehold.co/100x100/D2B48C/4a403a?text=AH", // Tan
+                    name: "Kerollos S.",
+                    text: "بجد يا نورهان، حابب أشكرك جدا جدا ❤️كنتي دايمًا معانا في كل حاجة، بتجاوبي على كل الأسئلة، وبتساعدينا من غير ما تزهقي ولا تتأخري لحظة. دعمك لينا فرّق معانا جدًا، وأنا شخصيًا ممتن ليكي جدًا 🙏",
+                    image: "https://lh3.googleusercontent.com/pw/AP1GczMHd_VESSwdxAqO3mOwlpZ6pxB-Kl_8OUcbN5DhrdA4rFUWCw6Knqc25U9lqo3P9Qlq-3QTm7-k2gAdzLO2OC2oW9HMLHRXcb5Tih5NePtUbTSykCXhVAPCPxlTA_fVBwpio-reaaL9p_mwBvbCNueH=w250-h250-s-no-gm?authuser=0", 
                 },
+                // 2. رسالة Majd Al-Hossein
                 {
-                    name: "Jana M.",
-                    text: "The B1 class wouldn't be the same without your energy! You always managed to turn the hardest concepts into fun lessons. Thanks for making SA 3 memorable. Wishing you a great break and happy holidays!",
-                    image: "https://placehold.co/100x100/A0522D/faf7f2?text=JM", // Sienna
+                    name: "Majd Al-Hossein",
+                    text: "Thank you so much Nourhan for all things that you have helped us with. Our class won't be that good and organized without your wonderful effort.🤍",
+                    image: "https://lh3.googleusercontent.com/pw/AP1GczOS1klzqRT6RpU4wGeQIDwyYZ1NyhcaSrmh56qHBRjEBdHjIJTMQ7hLGbVFcqzd5xIPPUrRQwYgYF-Qq11uCgNFXWtg-DhJ2UbD8fprfXbvkNh_wyewxkztUXgx2r51apilyEDiFYGiPmr3axDjmtFu=w250-h250-s-no-gm?authuser=0", // Placeholder for Majd
                 },
+                // 3. رسالة Nada
                 {
-                    name: "Omar K.",
-                    text: "I was struggling a lot with the deployment phase, but your step-by-step guidance made it click. You're an incredible mentor, Nourhan. Your technical insight is unparalleled. See you next term!",
-                    image: "https://placehold.co/100x100/8B4513/faf7f2?text=OK", // SaddleBrown
+                    name: "Nada M.",
+                    text: "شكرًا جدًا يا نورهان على دعمك واهتمامك لنا خلال رحلة الاكاديمية، كنتِ دائمًا بتساعدينا بتعليماتك ونصائحك🤍 سعيدة اني اتعرفت على انسانه جميلة زيك... انتِ خير معرفة حقيقي🤍🤍 اكيد انتِ عارفه اني مش عارفه اعبر😅 🤭🤍🤍 The best facilitator🤍",
+                    image: "https://lh3.googleusercontent.com/pw/AP1GczNGhB8_K2D8VjtYqXPgCi-cqc8w9nsxDGsusXMdZxkcXZxel7ZPCi1Xvn26mmKe3VIbIRtUhQYqmfUIMgQ1-lxh8Ds7mUAKwpuEoo7A2gKMJq94ApPiKd59zDlkPkMv7QVxAFgXdQCGv8o9T19lASzJ=w250-h250-s-no-gm?authuser=0", // Placeholder for Nada
                 },
+                // 4. رسالة Amal Ewis
                 {
-                    name: "Sarah E.",
-                    text: "Thank you for creating such a supportive learning environment. It felt safe to ask questions, no matter how small. Your mentorship is a gift to all of us, and we are so lucky to have you. Best wishes!",
-                    image: "https://placehold.co/100x100/F4A460/4a403a?text=SE", // SandyBrown
-                },
-                {
-                    name: "Tariq F.",
-                    text: "I learned so much about clean code practices this month, thanks entirely to your focused feedback. This experience has significantly changed how I approach programming. Thank you for pushing me!",
-                    image: "https://placehold.co/100x100/CD853F/4a403a?text=TF", // Peru
-                },
-                {
-                    name: "Layla P.",
-                    text: "Your encouragement during the difficult phases of the project meant the world. It’s hard to find a mentor who cares so much about both technical growth and personal well-being. Thank you for everything!",
-                    image: "https://placehold.co/100x100/E9967A/4a403a?text=LP", // DarkSalmon
+                    name: "Amal Ewis",
+                    text: "بجد بجد شكرا ليكي من قلبي ع كل حاجة حلوة عملتيها وانك كنتي صاحبتي قبل أي حاجة وكنتي بتهوني عليا وانا مضغوطه وحقيقي فخورة ان حد زيك ف حياتي وممتنه للأحداث الي خلتني انقل من كلاس ل كلاس عشان اتعرف ع حد جميل زيك love you ya MoOzaa❤️❤️❤️❤️",
+                    image: "https://placehold.co/100x100/e74c3c/faf7f2?text=AE", // Placeholder for Amal
                 }
             ];
 
